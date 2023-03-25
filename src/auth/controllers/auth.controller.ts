@@ -54,7 +54,10 @@ export class AuthController {
     status: 200,
     description: 'Return  token',
   })
-  refreshToken(@CurrentUser() user: any, @Body() refreshToken: string) {
+  refreshToken(
+    @CurrentUser() user: any,
+    @Body() refreshToken: string,
+  ): Promise<Tokens> {
     return this.authService.refreshToken(user.id, refreshToken);
   }
 

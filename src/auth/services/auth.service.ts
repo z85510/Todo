@@ -58,8 +58,10 @@ export class AuthService {
 
     const tokens = await this.getToken(logginedUser.id, user.username);
     await this.updateRefreshToken(logginedUser.id, tokens.refresh_token);
-
-    return tokens;
+    delete logginedUser.password;
+    delete logginedUser.todos;
+    delete logginedUser.profile;
+    return { ...logginedUser, ...tokens };
   }
 
   logOut(userId: number) {
