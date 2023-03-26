@@ -7,8 +7,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -16,7 +14,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { validate, ValidationTypes } from 'class-validator';
+import { validate } from 'class-validator';
 import { CurrentUser } from '../../shared/decorators/user.decorator';
 import { User } from '../../shared/entities/user';
 import { TodoDto } from '../dtos/todo.dto';
