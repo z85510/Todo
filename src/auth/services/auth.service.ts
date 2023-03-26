@@ -59,6 +59,7 @@ export class AuthService {
     const tokens = await this.getToken(logginedUser.id, user.username);
     await this.updateRefreshToken(logginedUser.id, tokens.refresh_token);
     delete logginedUser.password;
+    delete logginedUser.refreshToken;
     delete logginedUser.todos;
     delete logginedUser.profile;
     return { ...logginedUser, ...tokens };

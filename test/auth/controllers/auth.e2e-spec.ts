@@ -5,9 +5,8 @@ import { AppModule } from '../../../src/core/app.module';
 import { User } from '../../../src/shared/entities/user';
 import { Profile } from '../../../src/user/entities/profile';
 
-describe('UserController (e2e)', () => {
+describe('AuthController (e2e)', () => {
   let app: INestApplication;
-  let user: User;
 
   afterAll(async () => {
     await app.close();
@@ -53,6 +52,7 @@ describe('UserController (e2e)', () => {
 
   describe('Login user > auth/login', () => {
     const URL = '/v1/api/auth/login';
+
     it('should return token', () => {
       return request(app.getHttpServer())
         .post(URL)
@@ -64,33 +64,65 @@ describe('UserController (e2e)', () => {
           expect(res.body).toHaveProperty('access_token');
           expect(res.body).toHaveProperty('refresh_token');
           expect(res.body).not.toHaveProperty('password');
-          user = res.body;
         });
     });
   });
 
   describe('Refresh Token > auth/refresh', () => {
     const URL = '/v1/api/auth/refresh';
+
     it('should return token', async () => {
+      let accessToken: string;
+      await request(app.getHttpServer())
+        .post('/v1/api/auth/login')
+        .send({ username: 'TestUser', password: '123456' })
+        .expect((res) => {
+          accessToken = res.body['access_token'];
+        });
+
       const mockUser = {
-        id: user.id,
-        username: user.username,
-        refreshToken: user.refreshToken,
+        refreshToken: accessToken,
       };
 
-      const req = request(app.getHttpServer()).post(URL).send(mockUser);
-      req.expect(201).expect((res) => {
-        expect(res.body).toEqual(
-          expect.objectContaining({
-            access_token: expect.any(String),
-            refresh_token: expect.any(String),
-          }),
-        );
-      });
+      return request(app.getHttpServer())
+        .post(URL)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(mockUser)
+        .expect(201)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('access_token');
+          expect(res.body).toHaveProperty('refresh_token');
+        });
     });
 
     it('should return 503 if token doesnt exist', () => {
       return request(app.getHttpServer()).post(URL).send({}).expect(503);
+    });
+  });
+
+  describe('Logout > auth/logout', () => {
+    const URL = '/v1/api/auth/logout';
+    it('should return token', async () => {
+      let accessToken: string;
+      let userId: number;
+
+      await request(app.getHttpServer())
+        .post('/v1/api/auth/login')
+        .send({ username: 'TestUser', password: '123456' })
+        .expect((res) => {
+          accessToken = res.body['access_token'];
+          userId = res.body['id'];
+        });
+
+      return request(app.getHttpServer())
+        .post(URL)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(`${userId}`)
+        .expect(201);
+    });
+
+    it('should return 503 if token doesnt exist', () => {
+      return request(app.getHttpServer()).post(URL).expect(503);
     });
   });
 });

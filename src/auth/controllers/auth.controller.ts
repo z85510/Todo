@@ -14,7 +14,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Public } from '../../shared/decorators/public.decorator';
-import { CurrentUser } from '../../shared/decorators/user.decorator';
+import { CurrentUserId } from '../../shared/decorators/user.decorator';
 import { Tokens } from '../../shared/utils/types';
 import { AuthDto } from '../dtos/auth.dto';
 import { AuthService } from '../services/auth.service';
@@ -55,16 +55,16 @@ export class AuthController {
     description: 'Return  token',
   })
   refreshToken(
-    @CurrentUser() user: any,
+    @CurrentUserId() userId: any,
     @Body() refreshToken: string,
   ): Promise<Tokens> {
-    return this.authService.refreshToken(user.id, refreshToken);
+    return this.authService.refreshToken(userId, refreshToken);
   }
 
   @Post('logout')
   @ApiOperation({ summary: 'Logout' })
   @ApiBearerAuth()
-  logout(@CurrentUser() user: any) {
-    return this.authService.logOut(user.id);
+  logout(@CurrentUserId() userId: any) {
+    return this.authService.logOut(userId);
   }
 }
