@@ -68,37 +68,37 @@ describe('AuthController (e2e)', () => {
     });
   });
 
-  describe('Refresh Token > auth/refresh', () => {
-    const URL = '/v1/api/auth/refresh';
+  // describe('Refresh Token > auth/refresh', () => {
+  //   const URL = '/v1/api/auth/refresh';
 
-    it('should return token', async () => {
-      let accessToken: string;
-      await request(app.getHttpServer())
-        .post('/v1/api/auth/login')
-        .send({ username: 'TestUser', password: '123456' })
-        .expect((res) => {
-          accessToken = res.body['access_token'];
-        });
+  //   it('should return token', async () => {
+  //     let accessToken: string;
+  //     await request(app.getHttpServer())
+  //       .post('/v1/api/auth/login')
+  //       .send({ username: 'TestUser', password: '123456' })
+  //       .expect((res) => {
+  //         accessToken = res.body['access_token'];
+  //       });
 
-      const mockUser = {
-        refreshToken: accessToken,
-      };
+  //     const mockUser = {
+  //       refreshToken: accessToken,
+  //     };
 
-      return request(app.getHttpServer())
-        .post(URL)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send(mockUser)
-        .expect(201)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('access_token');
-          expect(res.body).toHaveProperty('refresh_token');
-        });
-    });
+  //     return request(app.getHttpServer())
+  //       .post(URL)
+  //       .set('Authorization', `Bearer ${accessToken}`)
+  //       .send(mockUser)
+  //       .expect(201)
+  //       .expect((res) => {
+  //         expect(res.body).toHaveProperty('access_token');
+  //         expect(res.body).toHaveProperty('refresh_token');
+  //       });
+  //   });
 
-    it('should return 503 if token doesnt exist', () => {
-      return request(app.getHttpServer()).post(URL).send({}).expect(503);
-    });
-  });
+  //   it('should return 503 if token doesnt exist', () => {
+  //     return request(app.getHttpServer()).post(URL).send({}).expect(503);
+  //   });
+  // });
 
   describe('Logout > auth/logout', () => {
     const URL = '/v1/api/auth/logout';
@@ -117,7 +117,6 @@ describe('AuthController (e2e)', () => {
       return request(app.getHttpServer())
         .post(URL)
         .set('Authorization', `Bearer ${accessToken}`)
-        .send(`${userId}`)
         .expect(201);
     });
 

@@ -62,6 +62,7 @@ export class AuthService {
     delete logginedUser.refreshToken;
     delete logginedUser.todos;
     delete logginedUser.profile;
+
     return { ...logginedUser, ...tokens };
   }
 

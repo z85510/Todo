@@ -49,7 +49,6 @@ export class UsersService {
       throw new NotFoundException(`User with id ${userId} not found`);
     }
     delete user.password;
-    delete user.refreshToken;
     return user;
   }
 
@@ -113,7 +112,9 @@ export class UsersService {
     const user = await this.findById(userId);
 
     if (user.refreshToken == '' || user.refreshToken == null) {
-      throw new ForbiddenException(`You've already signed out!`);
+      return {
+        message: "You've already signed out!",
+      };
     }
 
     user.refreshToken = null;
@@ -150,6 +151,7 @@ export class UsersService {
         username: true,
         createdAt: true,
         updatedAt: true,
+        refreshToken: true,
         profile: {
           firstName: true,
           lastName: true,
