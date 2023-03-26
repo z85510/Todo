@@ -1,14 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { RepeatOptions } from '../enums/repeate.enum';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Todo } from './todo';
 
 @Entity({ name: 'task' })
@@ -42,6 +33,6 @@ export class Task {
   updatedAt: Date;
 
   @ApiProperty({ type: () => Todo })
-  @ManyToOne(() => Todo, (todo) => todo.tasks)
+  @ManyToOne(() => Todo, (todo) => todo.tasks, { onDelete: 'CASCADE' })
   todo: Todo;
 }

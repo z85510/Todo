@@ -65,9 +65,9 @@ export class Todo {
   repeatTime: RepeatOptions;
 
   @ApiProperty({ type: () => Task, format: 'table' })
-  @OneToMany(() => Task, (task) => task.todo)
+  @OneToMany(() => Task, (task) => task.todo, { onDelete: 'CASCADE' })
   tasks: Task[];
 
-  @ManyToOne(() => User, (user) => user.todos)
+  @ManyToOne(() => User, (user) => user.todos, { onDelete: 'CASCADE' })
   user: User;
 }

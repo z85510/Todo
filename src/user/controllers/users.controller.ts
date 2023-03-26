@@ -22,6 +22,7 @@ import { UsersService } from '../services/users.service';
 import { CurrentUser } from '../../shared/decorators/user.decorator';
 import { User } from '../../shared/entities/user';
 import { CreateUserProfileParams } from '../../shared/utils/types';
+import { CreateProfileDto } from '../dtos/create_profile.dto';
 
 @Controller()
 @ApiTags('User')
@@ -69,17 +70,17 @@ export class UsersController {
     }
   }
 
-  @Post('user/profile')
-  @ApiOperation({ summary: 'Update current user profile' })
+  @Post('profile')
+  @ApiOperation({ summary: 'create current user profile' })
   @ApiResponse({
     status: 200,
-    description: 'Update  userProfile',
+    description: 'Create User Profile',
     type: Profile,
   })
   @UsePipes(ValidationPipe)
   createUserProfile(
     @CurrentUser() user: any,
-    @Body() userProfileDetail: CreateUserProfileParams,
+    @Body() userProfileDetail: CreateProfileDto,
   ) {
     return this.userService.createProfile(user.id, userProfileDetail);
   }
@@ -88,7 +89,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get current user profile' })
   @ApiResponse({
     status: 200,
-    description: 'Return  userProfile',
+    description: 'Return  User Profile',
     type: Profile,
   })
   getUserProfile(@CurrentUser() user: any) {

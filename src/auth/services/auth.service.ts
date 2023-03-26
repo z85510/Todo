@@ -70,15 +70,16 @@ export class AuthService {
     return this.usersService.logout(userId);
   }
 
-  async refreshToken(userId: number, refreshToken: string) {
+  async refreshToken(userId: number, rToken: string) {
     const user = await this.usersService.findById(userId);
     const tokens = await this.getToken(user.id, user.username);
 
-    if (!comparePassword(refreshToken, user.refreshToken)) {
+    if (!comparePassword(rToken['refreshToken'], user.refreshToken)) {
       throw new ForbiddenException(`Invalid credentials!`);
     }
 
     await this.updateRefreshToken(user.id, tokens.refresh_token);
+
     return tokens;
   }
 

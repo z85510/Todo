@@ -54,6 +54,7 @@ export class AuthController {
     status: 200,
     description: 'Return  token',
   })
+  @UsePipes(ValidationPipe)
   refreshToken(
     @CurrentUserId() userId: any,
     @Body() refreshToken: string,

@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UseFilters,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -15,6 +16,7 @@ import {
 import { Repository } from 'typeorm';
 import { User } from '../../shared/entities/user';
 import { encodePassword } from '../../shared/utils/bcrypt';
+import { CreateProfileDto } from '../dtos/create_profile.dto';
 import { Profile } from '../entities/profile';
 import { IUser } from '../interfaces/user.interface';
 
@@ -123,16 +125,20 @@ export class UsersService {
     await this.userRepository.save(user);
 
     return {
-      message: 'Time to log out and live your best life! See you next time!',
+      message:
+        'Goodbye ' +
+        user.username +
+        ', Time to log out and live your best life!\nSee you next time!',
     };
   }
 
   async deleteUser(userId: number) {
     const user = await this.findById(userId);
+
     return this.userRepository.delete(user);
   }
 
-  async createProfile(userId: number, profileDetail: CreateUserProfileParams) {
+  async createProfile(userId: number, profileDetail: CreateProfileDto) {
     const user = await this.findById(userId);
 
     const newProfile = this.profileRepository.create(profileDetail);
@@ -143,21 +149,13 @@ export class UsersService {
   }
 
   async getUserProfile(userId: number) {
-    const profiles = await this.userRepository.find({
-      relations: { profile: true },
+    const profiles = await this.profileRepository.findOne({
       where: { id: userId },
       select: {
-        id: true,
-        username: true,
-        createdAt: true,
-        updatedAt: true,
-        refreshToken: true,
-        profile: {
-          firstName: true,
-          lastName: true,
-          email: true,
-          birthDate: true,
-        },
+        firstName: true,
+        lastName: true,
+        email: true,
+        birthDate: true,
       },
     });
     return profiles;

@@ -1,32 +1,43 @@
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../../../src/core/app.module';
-import { User } from '../../../src/shared/entities/user';
-import { Profile } from '../../../src/user/entities/profile';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
+  let accessToken: string;
+  let refreshToken: string;
+  const baseUrl = '/v1/api/';
+
+  beforeEach(async () => {
+    const moduleFixture = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix(baseUrl);
+    await app.init();
+
+    const response = await request(app.getHttpServer())
+      .post(`${baseUrl}auth/login`)
+      .send({ username: 'RF', password: '123456789' });
+    accessToken = response.body['access_token'];
+    refreshToken = response.body['refresh_token'];
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
 
   afterAll(async () => {
     await app.close();
   });
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    app.setGlobalPrefix('/v1/api');
-    await app.init();
-  });
-
   describe('Creating new user > auth/register', () => {
-    const URL = '/v1/api/auth/register';
+    const URL = 'auth/register';
     it('should create a new user and return tokens', () => {
       return request(app.getHttpServer())
-        .post(URL)
+        .post(`${baseUrl}${URL}`)
         .send({ username: 'TestUser' + new Date(), password: '123456' })
         .expect(201)
         .expect((res) => {
@@ -38,8 +49,8 @@ describe('AuthController (e2e)', () => {
 
     it('should return a 400 when username is already exist', () => {
       return request(app.getHttpServer())
-        .post(URL)
-        .send({ username: 'TestUser', password: '123456' })
+        .post(`${baseUrl}${URL}`)
+        .send({ username: 'RF', password: '123456789' })
         .expect(400)
         .expect((res) => {
           expect(res.body).toEqual({
@@ -48,15 +59,19 @@ describe('AuthController (e2e)', () => {
           });
         });
     });
+
+    it('should return a 400 when username or password is empty', () => {
+      return request(app.getHttpServer()).post(`${baseUrl}${URL}`).expect(400);
+    });
   });
 
   describe('Login user > auth/login', () => {
-    const URL = '/v1/api/auth/login';
+    const URL = 'auth/login';
 
     it('should return token', () => {
       return request(app.getHttpServer())
-        .post(URL)
-        .send({ username: 'TestUser', password: '123456' })
+        .post(`${baseUrl}${URL}`)
+        .send({ username: 'RF', password: '123456789' })
         .expect(201)
         .expect((res) => {
           expect(res.body).toHaveProperty('id');
@@ -66,62 +81,46 @@ describe('AuthController (e2e)', () => {
           expect(res.body).not.toHaveProperty('password');
         });
     });
+
+    it('should return a 400 when username or password is empty', () => {
+      return request(app.getHttpServer()).post(`${baseUrl}${URL}`).expect(400);
+    });
   });
 
-  // describe('Refresh Token > auth/refresh', () => {
-  //   const URL = '/v1/api/auth/refresh';
+  describe('Refresh Token > auth/refresh', () => {
+    const URL = 'auth/refresh';
 
-  //   it('should return token', async () => {
-  //     let accessToken: string;
-  //     await request(app.getHttpServer())
-  //       .post('/v1/api/auth/login')
-  //       .send({ username: 'TestUser', password: '123456' })
-  //       .expect((res) => {
-  //         accessToken = res.body['access_token'];
-  //       });
+    it('should return token', async () => {
+      return request(app.getHttpServer())
+        .post(`${baseUrl}${URL}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ refreshToken: refreshToken })
+        .expect(201)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('access_token');
+          expect(res.body).toHaveProperty('refresh_token');
+        });
+    });
 
-  //     const mockUser = {
-  //       refreshToken: accessToken,
-  //     };
-
-  //     return request(app.getHttpServer())
-  //       .post(URL)
-  //       .set('Authorization', `Bearer ${accessToken}`)
-  //       .send(mockUser)
-  //       .expect(201)
-  //       .expect((res) => {
-  //         expect(res.body).toHaveProperty('access_token');
-  //         expect(res.body).toHaveProperty('refresh_token');
-  //       });
-  //   });
-
-  //   it('should return 503 if token doesnt exist', () => {
-  //     return request(app.getHttpServer()).post(URL).send({}).expect(503);
-  //   });
-  // });
+    it('should return 503 if token is missing', () => {
+      return request(app.getHttpServer())
+        .post(`${baseUrl}${URL}`)
+        .send({})
+        .expect(503);
+    });
+  });
 
   describe('Logout > auth/logout', () => {
-    const URL = '/v1/api/auth/logout';
+    const URL = 'auth/logout';
     it('should return token', async () => {
-      let accessToken: string;
-      let userId: number;
-
-      await request(app.getHttpServer())
-        .post('/v1/api/auth/login')
-        .send({ username: 'TestUser', password: '123456' })
-        .expect((res) => {
-          accessToken = res.body['access_token'];
-          userId = res.body['id'];
-        });
-
       return request(app.getHttpServer())
-        .post(URL)
+        .post(`${baseUrl}${URL}`)
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(201);
     });
 
-    it('should return 503 if token doesnt exist', () => {
-      return request(app.getHttpServer()).post(URL).expect(503);
+    it('should return 503 if token is missing', () => {
+      return request(app.getHttpServer()).post(`${baseUrl}${URL}`).expect(503);
     });
   });
 });

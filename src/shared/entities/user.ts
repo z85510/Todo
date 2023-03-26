@@ -37,11 +37,11 @@ export class User {
   updatedAt: Date;
 
   @ApiProperty({ type: Profile, format: 'profile' })
-  @OneToOne(() => Profile)
+  @OneToOne(() => Profile, { onDelete: 'CASCADE' })
   @JoinColumn()
   profile: Profile;
 
   @ApiProperty({ type: () => Todo, format: 'table' })
-  @OneToMany(() => Todo, (todo) => todo.user)
+  @OneToMany(() => Todo, (todo) => todo.user, { onDelete: 'CASCADE' })
   todos: Todo[];
 }

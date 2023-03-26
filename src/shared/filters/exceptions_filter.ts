@@ -38,11 +38,14 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const responseBody = {
       statusCode: statusCode,
       message: message,
-      details: error['response']['message'],
-
-      // timestamp: new Date().toISOString(),
-      // url: request.url,
+      details: '',
     };
+
+    if (error && error['response'] && error['response']['message']) {
+      responseBody.details = error['response']['message'];
+    } else {
+      delete responseBody.details;
+    }
 
     response.status(statusCode).json(responseBody);
   }
