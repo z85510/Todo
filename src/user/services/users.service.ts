@@ -1,18 +1,12 @@
 import {
-  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
   NotFoundException,
-  UseFilters,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import {
-  CreateUserParams,
-  CreateUserProfileParams,
-  UpdateUserParams,
-} from 'src/shared/utils/types';
+import { CreateUserParams, UpdateUserParams } from 'src/shared/utils/types';
 import { Repository } from 'typeorm';
 import { User } from '../../shared/entities/user';
 import { encodePassword } from '../../shared/utils/bcrypt';
