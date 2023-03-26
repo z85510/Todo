@@ -16,13 +16,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Profile } from '../entities/profile';
-import { UpdateUserDto } from '../dtos/update_user.dto';
-import { UsersService } from '../services/users.service';
 import { CurrentUser } from '../../shared/decorators/user.decorator';
 import { User } from '../../shared/entities/user';
-import { CreateUserProfileParams } from '../../shared/utils/types';
 import { CreateProfileDto } from '../dtos/create_profile.dto';
+import { UpdateUserDto } from '../dtos/update_user.dto';
+import { Profile } from '../entities/profile';
+import { UsersService } from '../services/users.service';
 
 @Controller()
 @ApiTags('User')
