@@ -16,19 +16,21 @@ import { Todo } from '../todo/entities/todo';
 import { TodoModule } from '../todo/todo.module';
 import { Profile } from '../user/entities/profile';
 import { UsersModule } from '../user/users.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     UsersModule,
     AuthModule,
     TodoModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'x9n7z4a1Sa',
-      database: 'snakes_pool',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [User, Profile, Todo, Task],
       synchronize: true,
     }),
