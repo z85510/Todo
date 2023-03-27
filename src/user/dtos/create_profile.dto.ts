@@ -1,13 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsNotEmpty,
-  IsString,
-  IsOptional,
-  IsEmail,
-  IsDate,
-  isMobilePhone,
-  IsMobilePhone,
   IsDateString,
+  IsEmail,
+  IsMobilePhone,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
 } from 'class-validator';
 
 export class CreateProfileDto {

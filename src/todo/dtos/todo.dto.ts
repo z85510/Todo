@@ -13,11 +13,11 @@ import { RepeatOptions } from '../enums/repeate.enum';
 export class TodoDto {
   @IsNotEmpty()
   @IsString()
-  @ApiProperty()
+  @ApiProperty({ example: 'title', description: 'Todo title' })
   title: string;
 
   @IsOptional()
-  @ApiProperty()
+  @ApiProperty({ example: 'description', description: 'Todo description' })
   @IsString()
   description: string;
 
