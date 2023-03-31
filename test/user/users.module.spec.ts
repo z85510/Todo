@@ -10,16 +10,16 @@ describe('UsersService', () => {
   let service: UsersService;
   let app;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'mysql',
           host: 'localhost',
           port: 3306,
-          username: 'root',
-          password: 'x9n7z4a1Sa',
-          database: 'snakes_pool',
+          username: 'test',
+          password: 'test123test',
+          database: 'TEST_JS',
           entities: [User, Profile, Todo, Task],
           synchronize: true,
         }),

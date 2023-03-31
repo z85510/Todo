@@ -38,7 +38,7 @@ describe('AuthController (e2e)', () => {
     it('should create a new user and return tokens', () => {
       return request(app.getHttpServer())
         .post(`${baseUrl}${URL}`)
-        .send({ username: 'TestUser' + new Date(), password: '123456' })
+        .send({ username: 'RF', password: '123456789' })
         .expect(201)
         .expect((res) => {
           expect(res.body).toHaveProperty('access_token');
