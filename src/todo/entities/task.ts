@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Todo } from './todo';
 
 @Entity({ name: 'task' })
@@ -18,10 +24,10 @@ export class Task {
   @Column({ nullable: true })
   deleted: boolean;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
   @ManyToOne(() => Todo, (todo) => todo.tasks, { onDelete: 'CASCADE' })
