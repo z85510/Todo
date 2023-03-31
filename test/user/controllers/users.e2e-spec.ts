@@ -1,6 +1,5 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { emit } from 'process';
 import * as request from 'supertest';
 import { AppModule } from '../../../src/core/app.module';
 import { CreateUserProfileParams } from '../../../src/shared/utils/types';

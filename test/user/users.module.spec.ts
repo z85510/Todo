@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../../src/shared/entities/user';
-import { TypeORMConfig } from '../../src/shared/utils/typeorm_module';
 import { Task } from '../../src/todo/entities/task';
 import { Todo } from '../../src/todo/entities/todo';
 import { UsersController } from '../../src/user/controllers/users.controller';
@@ -11,10 +10,19 @@ describe('UsersService', () => {
   let service: UsersService;
   let app;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        TypeORMConfig([User, Profile, Todo, Task]),
+        TypeOrmModule.forRoot({
+          type: 'mysql',
+          host: 'localhost',
+          port: 3306,
+          username: 'test',
+          password: 'test123test',
+          database: 'TEST_JS',
+          entities: [User, Profile, Todo, Task],
+          synchronize: true,
+        }),
         TypeOrmModule.forFeature([User, Profile, Todo, Task]),
       ],
       controllers: [UsersController],

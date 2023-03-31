@@ -22,9 +22,9 @@ export class Profile {
   @Column({ nullable: true })
   email: string;
 
-  @CreateDateColumn({ nullable: true })
+  @Column({ nullable: true })
   birthDate: Date;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createdAt: Date;
 }
