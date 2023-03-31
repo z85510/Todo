@@ -1,4 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'user_profiles' })
 export class Profile {
@@ -17,9 +22,9 @@ export class Profile {
   @Column({ nullable: true })
   email: string;
 
-  @Column({ nullable: true })
+  @CreateDateColumn({ nullable: true })
   birthDate: Date;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }
