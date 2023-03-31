@@ -27,16 +27,16 @@ export class Todo {
   @Column({ nullable: true, default: () => false })
   deleted: boolean;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @CreateDateColumn({ nullable: true })
+  @Column({ nullable: true })
   dueDate: Date;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   reminderDate: Date;
 
   @Column({ nullable: true, default: () => false })

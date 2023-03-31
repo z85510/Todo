@@ -24,10 +24,10 @@ export class Task {
   @Column({ nullable: true })
   deleted: boolean;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
   @ManyToOne(() => Todo, (todo) => todo.tasks, { onDelete: 'CASCADE' })

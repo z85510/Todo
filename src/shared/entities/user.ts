@@ -1,6 +1,5 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToMany,
@@ -24,10 +23,10 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
   @OneToOne(() => Profile, { onDelete: 'CASCADE' })
