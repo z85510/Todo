@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { AppModule } from '../../../src/core/app.module';
-import { CreateUserProfileParams } from '../../../src/shared/utils/types';
-import { UpdateUserDto } from '../../../src/user/dtos/update_user.dto';
+import { AppModule } from '../../src/core/app.module';
+import { CreateUserProfileParams } from '../../src/shared/utils/types';
+import { UpdateUserDto } from '../../src/user/dtos/update_user.dto';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
