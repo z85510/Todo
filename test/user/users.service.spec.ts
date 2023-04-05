@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../../../src/shared/entities/user';
-import * as bcryptUtils from '../../../src/shared/utils/bcrypt';
-import { CreateUserParams } from '../../../src/shared/utils/types';
-import { Profile } from '../../../src/user/entities/profile';
-import { UsersService } from '../../../src/user/services/users.service';
+import { User } from '../../src/shared/entities/user';
+import * as bcryptUtils from '../../src/shared/utils/bcrypt';
+import { CreateUserParams } from '../../src/shared/utils/types';
+import { Profile } from '../../src/user/entities/profile';
+import { UsersService } from '../../src/user/services/users.service';
 
 describe('UsersService', () => {
   let usersService: UsersService;

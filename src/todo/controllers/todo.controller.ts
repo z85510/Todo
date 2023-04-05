@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -48,7 +49,7 @@ export class TodoController {
   ): Promise<ITodo> {
     const errors = await validate(todo);
     if (errors.length > 0) {
-      throw new BadRequestException(errors); // throw a BadRequestException with the validation errors
+      throw new BadRequestException(errors);
     }
     todo.user = user;
     return this.todoService.createTodo(todo);
@@ -71,53 +72,13 @@ export class TodoController {
     return this.todoService.updateById(id, todo);
   }
 
-  // @Get('user')
-  // @ApiOperation({ summary: 'Get current user' })
-  // @ApiResponse({ status: 200, description: 'Return  user', type: User })
-  // getCurrent(@CurrentUser() user: any) {
-  //   return this.userService.findById(user.id);
-  // }
-
-  // @Patch('user/update')
-  // @ApiOperation({ summary: 'Update current user' })
-  // @ApiResponse({ status: 200, description: 'Return  user', type: User })
-  // updateUserById(@CurrentUser() user: any, @Body() userDetails: UpdateUserDto) {
-  //   return this.userService.updateUserById(user.id, userDetails);
-  // }
-
-  // @Delete('user/delete')
-  // @ApiOperation({ summary: 'Delete current user' })
-  // @ApiResponse({ status: 200, description: 'Return  user', type: User })
-  // deleteUser(@CurrentUser() user: any) {
-  //   try {
-  //     return this.userService.deleteUser(user.id);
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // }
-
-  // @Post('user/profile')
-  // @ApiOperation({ summary: 'Update current user profile' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Update  userProfile',
-  //   type: Profile,
-  // })
-  // createUserProfile(
-  //   @CurrentUser() user: any,
-  //   @Body() userProfileDetail: CreateUserProfileParams,
-  // ) {
-  //   return this.userService.createProfile(user.id, userProfileDetail);
-  // }
-
-  // @Get('profile')
-  // @ApiOperation({ summary: 'Get current user profile' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Return  userProfile',
-  //   type: Profile,
-  // })
-  // getUserProfile(@CurrentUser() user: any) {
-  //   return this.userService.getUserProfile(user.id);
-  // }
+  @Delete('/:id')
+  @ApiOperation({ summary: 'Delete todo' })
+  @ApiResponse({
+    status: 200,
+    description: 'Delete  Todo',
+  })
+  deleteById(@Param('id', ParseIntPipe) id: number) {
+    return this.todoService.deleteTodo(id);
+  }
 }
