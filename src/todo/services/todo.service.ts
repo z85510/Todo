@@ -11,6 +11,7 @@ import { TodoDto } from '../dtos/todo.dto';
 import { Task } from '../entities/task';
 import { Todo } from '../entities/todo';
 import { ITodo } from '../interfaces/todo.interface';
+import { log } from 'console';
 
 @Injectable()
 export class TodoService {
@@ -25,7 +26,18 @@ export class TodoService {
     });
   }
 
-  async findById(todoId: number): Promise<ITodo | undefined> {
+  async findById(todoId: number): Promise<Todo | undefined> {
+    const todo = await this.todoRepository.findOne({
+      where: { id: todoId },
+      relations: ['tasks'],
+    });
+    if (!todo || todoId == undefined || !todoId) {
+      throw new NotFoundException(`Todo with id ${todoId} not found`);
+    }
+    return todo;
+  }
+
+  async getTodoInfo(todoId: number): Promise<ITodo | undefined> {
     const todo = await this.todoRepository.findOne({
       where: { id: todoId },
       relations: ['tasks'],
@@ -78,7 +90,7 @@ export class TodoService {
   }
 
   async updateById(todoId: number, todoDetails: TodoDto) {
-    const todo = await this.findById(todoId);
+    const todo = await this.getTodoInfo(todoId);
 
     const updatedUser = await this.todoRepository.save({
       ...todo,
@@ -102,7 +114,10 @@ export class TodoService {
   }
 
   async deleteTodo(todoId: number) {
-    const todo = await this.findById(todoId);
-    return this.todoRepository.delete(todo);
+    const todo: Todo = await this.findById(todoId);
+    if (!todo || todoId == undefined || !todoId) {
+      throw new NotFoundException(`Todo with id ${todoId} not found`);
+    }
+    return this.todoRepository.remove(todo);
   }
 }

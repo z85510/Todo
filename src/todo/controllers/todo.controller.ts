@@ -59,7 +59,7 @@ export class TodoController {
   @ApiOperation({ summary: 'Find todo by id' })
   @ApiResponse({ status: 200, description: 'Return  todo', type: Todo })
   findUser(@Param('id', ParseIntPipe) id: number) {
-    return this.todoService.findById(id);
+    return this.todoService.getTodoInfo(id);
   }
 
   @Patch('/:id')

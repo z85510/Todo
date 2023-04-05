@@ -128,8 +128,7 @@ export class UsersService {
 
   async deleteUser(userId: number) {
     const user = await this.findById(userId);
-
-    return this.userRepository.delete(user);
+    return this.userRepository.remove(user);
   }
 
   async createProfile(userId: number, profileDetail: CreateProfileDto) {
