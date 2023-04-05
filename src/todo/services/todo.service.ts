@@ -100,4 +100,9 @@ export class TodoService {
     };
     return todoItem;
   }
+
+  async deleteTodo(todoId: number) {
+    const todo = await this.findById(todoId);
+    return this.todoRepository.delete(todo);
+  }
 }
