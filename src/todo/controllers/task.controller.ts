@@ -40,7 +40,7 @@ export class TaskController {
   })
   async createTask(
     @Body() taskDto: TaskDto,
-    @Body('todoId', ParseIntPipe) todoId: number,
+    @Body('todoId') todoId: number,
   ): Promise<ITask> {
     const todo = await this.todoService.findById(todoId);
     if (!todo) {
