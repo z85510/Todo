@@ -8,16 +8,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../shared/entities/user';
 import { TodoDto } from '../dtos/todo.dto';
-import { Task } from '../entities/task';
 import { Todo } from '../entities/todo';
 import { ITodo } from '../interfaces/todo.interface';
-import { log } from 'console';
 
 @Injectable()
 export class TodoService {
   constructor(
     @InjectRepository(Todo) private todoRepository: Repository<Todo>,
-    @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
 
   async findAll(user: User): Promise<ITodo[]> {

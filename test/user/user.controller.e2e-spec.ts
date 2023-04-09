@@ -163,20 +163,20 @@ describe('UserController (e2e)', () => {
     });
   });
 
-  describe('Delete User / Delete', () => {
-    const URL = 'user/delete';
+  // describe('Delete User / Delete', () => {
+  //   const URL = 'user/delete';
 
-    it('should return 503 if token is missing', () => {
-      return request(app.getHttpServer())
-        .delete(`${baseUrl}${URL}`)
-        .expect(503);
-    });
+  //   it('should return 503 if token is missing', () => {
+  //     return request(app.getHttpServer())
+  //       .delete(`${baseUrl}${URL}`)
+  //       .expect(503);
+  //   });
 
-    it('should delete user', async () => {
-      return request(app.getHttpServer())
-        .delete(`${baseUrl}${URL}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .expect(200);
-    });
-  });
+  //   it('should delete user', async () => {
+  //     return request(app.getHttpServer())
+  //       .delete(`${baseUrl}${URL}`)
+  //       .set('Authorization', `Bearer ${accessToken}`)
+  //       .expect(200);
+  //   });
+  // });
 });

@@ -31,7 +31,7 @@ export class TodoController {
 
   @Get('all')
   @ApiOperation({ summary: 'Get all todos' })
-  @ApiResponse({ status: 200, description: 'Return all users', type: [Todo] })
+  @ApiResponse({ status: 200, description: 'Return all todos', type: [Todo] })
   async findAll(@CurrentUser() user: User) {
     return this.todoService.findAll(user);
   }
