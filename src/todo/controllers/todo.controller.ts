@@ -31,7 +31,7 @@ export class TodoController {
 
   @Get('all')
   @ApiOperation({ summary: 'Get all todos' })
-  @ApiResponse({ status: 200, description: 'Return all users', type: [Todo] })
+  @ApiResponse({ status: 200, description: 'Return all todos', type: [Todo] })
   async findAll(@CurrentUser() user: User) {
     return this.todoService.findAll(user);
   }
@@ -59,7 +59,7 @@ export class TodoController {
   @ApiOperation({ summary: 'Find todo by id' })
   @ApiResponse({ status: 200, description: 'Return  todo', type: Todo })
   findUser(@Param('id', ParseIntPipe) id: number) {
-    return this.todoService.findById(id);
+    return this.todoService.getTodoInfo(id);
   }
 
   @Patch('/:id')

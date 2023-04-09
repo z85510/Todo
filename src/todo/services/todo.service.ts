@@ -8,7 +8,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../shared/entities/user';
 import { TodoDto } from '../dtos/todo.dto';
-import { Task } from '../entities/task';
 import { Todo } from '../entities/todo';
 import { ITodo } from '../interfaces/todo.interface';
 
@@ -16,7 +15,6 @@ import { ITodo } from '../interfaces/todo.interface';
 export class TodoService {
   constructor(
     @InjectRepository(Todo) private todoRepository: Repository<Todo>,
-    @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
 
   async findAll(user: User): Promise<ITodo[]> {
@@ -25,7 +23,18 @@ export class TodoService {
     });
   }
 
-  async findById(todoId: number): Promise<ITodo | undefined> {
+  async findById(todoId: number): Promise<Todo | undefined> {
+    const todo = await this.todoRepository.findOne({
+      where: { id: todoId },
+      relations: ['tasks'],
+    });
+    if (!todo || todoId == undefined || !todoId) {
+      throw new NotFoundException(`Todo with id ${todoId} not found`);
+    }
+    return todo;
+  }
+
+  async getTodoInfo(todoId: number): Promise<ITodo | undefined> {
     const todo = await this.todoRepository.findOne({
       where: { id: todoId },
       relations: ['tasks'],
@@ -78,7 +87,7 @@ export class TodoService {
   }
 
   async updateById(todoId: number, todoDetails: TodoDto) {
-    const todo = await this.findById(todoId);
+    const todo = await this.getTodoInfo(todoId);
 
     const updatedUser = await this.todoRepository.save({
       ...todo,
@@ -102,7 +111,10 @@ export class TodoService {
   }
 
   async deleteTodo(todoId: number) {
-    const todo = await this.findById(todoId);
-    return this.todoRepository.delete(todo);
+    const todo: Todo = await this.findById(todoId);
+    if (!todo || todoId == undefined || !todoId) {
+      throw new NotFoundException(`Todo with id ${todoId} not found`);
+    }
+    return this.todoRepository.remove(todo);
   }
 }
